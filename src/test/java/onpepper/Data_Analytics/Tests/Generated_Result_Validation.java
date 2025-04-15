@@ -15,7 +15,7 @@ import onpepper.Data_Analytics.TestComponent.BaseTest;
 public class Generated_Result_Validation extends BaseTest {
 
 	//As a user I should I select start and end date to visualize Borrowing Base trends for a particular range
-//	@Test(enabled = false)
+	@Test(enabled = false)
 	public void getStartDate() throws IOException, InterruptedException {
 		HomePage homePage = page.goTo();
 		String StartDate = "2024-07-02";
