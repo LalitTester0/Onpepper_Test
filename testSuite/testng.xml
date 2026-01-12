@@ -4,13 +4,18 @@
 	<listeners>
 		<listener class-name="onpepper.Data_Analytics.TestComponent.Listeners"></listener>
 	</listeners>
-	
-  <test  name="Test">
-	 
-    <classes>
-      <class name="onpepper.Data_Analytics.Tests.WhatIfAnalysis_Validation"/>
-      <class name="onpepper.Data_Analytics.Tests.UploadFileValidation"/>
-      <class name="onpepper.Data_Analytics.Tests.Generated_Result_Validation"/>
-    </classes>
-  </test> <!-- Test -->
-</suite> <!-- Suite -->
+
+	<test name="Test">
+
+		<classes>
+			<class name="onpepper.Data_Analytics.Tests.SourceFile_Upload_Validation" />
+			<class name="onpepper.Data_Analytics.Tests.Generate_BaseFile_Validation" />
+			<class name="onpepper.Data_Analytics.Tests.Save_Traigger_Funds" />
+			<class name="onpepper.Data_Analytics.Tests.Export_Reports" />
+			<class name="onpepper.Data_Analytics.Tests.LiquidityManagement" />
+
+		</classes>
+	</test> <!--
+	Test -->
+</suite> <!--
+Suite -->

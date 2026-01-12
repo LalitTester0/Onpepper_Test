@@ -3,13 +3,13 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test thread-count="5" name="Default test(failed)">
     <classes>
-      <class name="onpepper.Data_Analytics.Tests.SourceFile_Upload_Validation">
+      <class name="onpepper.Data_Analytics.Tests.Export_Reports">
         <methods>
+          <include name="use_WIA_PSSL_fund"/>
           <include name="closeapplication"/>
-          <include name="resetModal"/>
           <include name="launchApplication"/>
         </methods>
-      </class> <!-- onpepper.Data_Analytics.Tests.SourceFile_Upload_Validation -->
+      </class> <!-- onpepper.Data_Analytics.Tests.Export_Reports -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

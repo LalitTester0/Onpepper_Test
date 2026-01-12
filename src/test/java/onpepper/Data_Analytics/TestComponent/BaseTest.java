@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
@@ -33,7 +34,18 @@ public class BaseTest {
 		//ChromeOptions options = new ChromeOptions();
 		//options.setHeadless(true);
 		// driver = new ChromeDriver(options);
-		 driver=new ChromeDriver();
+		String downloadFilepath = prop.getProperty("downloadFilepath");
+		HashMap<String, Object> chromePrefs = new HashMap<>();
+		chromePrefs.put("profile.default_content_settings.popups", 0);
+		chromePrefs.put("download.default_directory", downloadFilepath); 
+		chromePrefs.put("download.prompt_for_download", false);
+		chromePrefs.put("safebrowsing.enabled", true);
+		ChromeOptions options = new ChromeOptions();
+		options.setExperimentalOption("prefs", chromePrefs);
+		 driver = new ChromeDriver(options);
+		//driver=new ChromeDriver();
+		 
+		 
 	
 		}
 		else if(browserName.equalsIgnoreCase("Edge")) {

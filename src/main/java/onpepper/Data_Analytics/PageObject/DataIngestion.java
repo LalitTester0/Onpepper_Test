@@ -1,10 +1,15 @@
 package onpepper.Data_Analytics.PageObject;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
@@ -21,108 +26,132 @@ public class DataIngestion extends AbstractComponent {
 
 	@FindBy(xpath = "(//div[contains(@class,'_baseDataTableContainer')]//table//tbody//td[3][contains(text(),'completed')]//parent::tr//td[6]//div)[1]")
 	WebElement previewBtn;
-	@FindBy (xpath = "//div[contains(@class,'_columnContainer')]//input")
-	List<WebElement> columncheckboxes;
-	@FindBy (xpath = "//div[contains(@class,'_columnContainer')]")
-	List<WebElement> columns;
-	@FindBy (xpath = "//div[contains(@class,'_columnContainer')]//label")
-	List<WebElement> columnLabels;
-	@FindBy (xpath = "(//div[contains(@class,'_tableContainer')]/div)[2]//span[@aria-label='setting']")
-	WebElement settingIcon;
-	@FindBy(xpath="//button[@aria-label='Close']")
-	WebElement closeBtn;
-	@FindBy(xpath="//div[@class='ant-modal-body']//div[1]")
-	WebElement columnValue;
-	@FindBy(xpath="//span[contains(.,'+ Extract New Base Data')]/parent::button")
+	@FindBy(xpath = "//span[contains(.,'+ Extract New Base Data')]/parent::button")
 	WebElement extractNewBaseBtn;
-	@FindBy(xpath="(//td[@title='03-12-2025']/following-sibling::td[4])[1]")
+	@FindBy(xpath = "(//td[text()='2025-04-10']/following-sibling::td[4])[1]")
 	WebElement baseFileasperDate;
-	
-	public String getbaseFileasperDate(){
-		return baseFileasperDate.getAttribute("title");
-	}
-	public SourceFileLists clickExtractNewBaseBtn() {
-		extractNewBaseBtn.click();
-		SourceFileLists  source=new SourceFileLists(driver);
+	@FindBy(xpath = "//span[@title='-- Select Fund --']")
+	WebElement selectFundDropdown;
+	@FindBy(xpath = "//div[contains(text(),'PCOF')]")
+	WebElement PCOFOption;
+	@FindBy(xpath = "//div[@title='PFLT']")
+	WebElement PFLTOption;
+	@FindBy(xpath = "//div[@title='PSSL']")
+	WebElement PSSLOption;
+	@FindBy(xpath = "//td[3]//span[text()='PFLT']")
+	List<WebElement> PFLTfundTypeColumn;
+	@FindBy(xpath = "//td[3]//span[text()='PSSL']")
+	List<WebElement> PSSLfundTypeColumn;
+	@FindBy(xpath = "//td[3]//span[text()='PCOF']")
+	List<WebElement> PCOFfundTypeColumn;
+	@FindBy(xpath = "//td[contains(text(),'No Data')]")
+	WebElement NoDataCell;
+	@FindBy(xpath = "//div[text()='Source Files']")
+	WebElement SourceFiletab;
+	@FindBy(xpath = "//span[contains(text(),' Extract New Base Data')]/parent::button")
+	WebElement ExtractNewBaseDataBtn;
+
+	public SourceFileLists select_SourceFileTab() {
+		SourceFiletab.click();
+		SourceFileLists source = new SourceFileLists(driver);
 		return source;
 	}
-	public void closeBtn() {
-		closeBtn.click();
-	}
-	public List<WebElement> uncheckAllColumn() throws InterruptedException {
-		previewBtn.click();
-		waitforElementAppear(settingIcon);
-		settingIcon.click();
-		for (int i =2; i<=10;i++) {
-			WebElement check=driver.findElement(By.xpath("(//input)["+i+"]"));
-			check.click();
-		}
-		
-		return columns;
-	}
-	public String getcellValue() throws InterruptedException {
-		WebElement cell = driver.findElement(By.xpath("//td[text()='Flairminds Technology LLC']/parent::tr//td[2]"));
-		cell.click();
-		Thread.sleep(2000);
-		driver.switchTo().activeElement();
-		String cellValue;
-		 try {
-			 String value = columnValue.getText();
-				int startIndex = value.indexOf(": ") + 2; 
-				 cellValue = value.substring(startIndex);
-		    } catch (StringIndexOutOfBoundsException e) {
-		    	cellValue="";
-		    }
 
-			return cellValue;
+	public BaseDataPreview clickOnBaseData(String Fundtype, String Status) throws InterruptedException {
+		// filteredPCOFValue();
+		previewBtn = driver.findElement(
+				By.xpath("(//span[text()='" + Fundtype + "']/ancestor::td/following-sibling::td//div//span[text()='"
+						+ Status + "']/ancestor::td/following-sibling::td//div[text()='Preview Base Data'])[1]"));
+		// Thread.sleep(5000);
+		waitforclickable(previewBtn);
+		Actions act = new Actions(driver);
+		act.click(previewBtn).perform();
+		// previewBtn.click();
+		BaseDataPreview base = new BaseDataPreview(driver);
+		return base;
 	}
-	public void openSettingIcon() {
-		settingIcon.click();
+
+	public ExtractNewBaseData select_ExtractNewBaseDataBtn() {
+		ExtractNewBaseDataBtn.click();
+		ExtractNewBaseData Data = new ExtractNewBaseData(driver);
+		return Data;
 	}
-	public void unselectAsset(int i) {
-		settingIcon.click();
-		WebElement check=driver.findElement(By.xpath("(//input)["+i+"]"));
-		check.click();
-		settingIcon.click();
+
+	public String noDataCellText() {
+		return NoDataCell.getText();
 	}
-	public String getExtractValue() throws InterruptedException {
-		/*WebElement cell = driver.findElement(By.xpath("//td[text()='Flairminds Technology LLC']/parent::tr//td[2]"));
-		cell.click();
-		Thread.sleep(2000);*/
-		//driver.switchTo().activeElement();
-		String FileName = getSourceFile();
-		String SheetName = getsheetName();
-		String ColumnName = getColumntName();
-		ExtractData extract=new ExtractData(driver);
-		
-		String extractvalue = extract.extractData(FileName, SheetName, ColumnName);
-		return extractvalue;
+
+	public void clickSelectFundDropdown() {
+		selectFundDropdown.click();
 	}
-	public String getSourceFile() throws InterruptedException {
-		WebElement sourcefile = driver.findElement(By.xpath("//strong[contains(.,'Source file name:')]/parent::div"));
+
+	public List<WebElement> filteredPCOFValue() throws InterruptedException {
+		clickSelectFundDropdown();
 		Thread.sleep(1000);
-		String filename = sourcefile.getText();
-		int startIndex = filename.indexOf(": ") + 2; 
-		int endIndex = filename.lastIndexOf(".xlsx"); 
-		String fileNames = filename.substring(startIndex, endIndex);
-		return fileNames;
+		waitforclickable(PCOFOption);
+
+		PCOFOption.click();
+		Thread.sleep(1000);
+		for (WebElement fundType : PCOFfundTypeColumn) {
+			System.out.println(fundType.getText());
+		}
+		return PCOFfundTypeColumn;
 	}
-	public String getsheetName() throws InterruptedException {
-		WebElement sheet = driver.findElement(By.xpath("//strong[contains(.,'Sheet name:')]/parent::div"));
-		//Thread.sleep(1000);
-		String sheetname = sheet.getText();
-		int startIndex = sheetname.indexOf(": ") + 2; 
-		String sheetName = sheetname.substring(startIndex);
-		return sheetName;
+
+	public List<WebElement> filteredPFLTValue() {
+		clickSelectFundDropdown();
+		PFLTOption.click();
+		return PFLTfundTypeColumn;
 	}
-	public String getColumntName() throws InterruptedException {
-		WebElement column = driver.findElement(By.xpath("//strong[contains(.,'Column name:')]/parent::div"));
-		//Thread.sleep(1000);
-		String columnname = column.getText();
-		int startIndex = columnname.indexOf(": ") + 2; 
-		String columnName = columnname.substring(startIndex);
-		return columnName;
+
+	public List<WebElement> filteredPSSLValue() {
+		clickSelectFundDropdown();
+		PSSLOption.click();
+		return PSSLfundTypeColumn;
 	}
-	
+
+	public String getbaseFileasperDate(String FundType) throws InterruptedException {
+		waitforElementAppear(baseFileasperDate);
+		if (FundType.equals("PCOF")) {
+			filteredPCOFValue();
+		} else if (FundType.equals("PFLT")) {
+			filteredPFLTValue();
+		} else if (FundType.equals("PSSL")) {
+			filteredPSSLValue();
+		}
+		// Thread.sleep(10000);
+		WebElement tdCell = baseFileasperDate;
+		List<WebElement> fileDivs = tdCell.findElements(By.xpath("./div/div"));
+		List<String> fileNames = new ArrayList<>();
+		for (WebElement div : fileDivs) {
+			String fullText = div.getText().trim();
+			fullText = fullText.replaceFirst("^\\d+\\.\\s*", "");
+			fullText = fullText.replaceFirst("\\.(xlsx|xlsm)$", "");
+			if (!fullText.isEmpty()) {
+				fileNames.add(fullText);
+			}
+		}
+		Collections.sort(fileNames);
+		String finalOutput = String.join("; ", fileNames);
+		return finalOutput;
+	}
+
+	public boolean verifyAllFileNamesPresent(String separated, String combined) {
+		String[] fileNamesToCheck = separated.split(";\\s*");
+		boolean allPresent = true;
+		for (String file : fileNamesToCheck) {
+			if (!combined.contains(file)) {
+				allPresent = false;
+				System.out.println("Missing file: " + file);
+			}
+		}
+		return allPresent;
+	}
+
+	public SourceFileLists clickExtractNewBaseBtn() {
+		extractNewBaseBtn.click();
+		SourceFileLists source = new SourceFileLists(driver);
+		return source;
+	}
 
 }

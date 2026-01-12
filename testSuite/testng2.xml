@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Suite">
+	<listeners>
+		<listener class-name="onpepper.Data_Analytics.TestComponent.Listeners"></listener>
+	</listeners>
+
+	<test name="All Tests">
+        <classes>
+            <class name="onpepper.Data_Analytics.Tests.Generate_BaseFile_Validation"/>
+        </classes>
+    </test>
+</suite> <!--
+Suite -->

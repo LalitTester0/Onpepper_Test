@@ -21,7 +21,14 @@ public class Listeners extends BaseTest implements ITestListener {
 
 	@Override
 	public void onTestStart(ITestResult result) {
-		test = extent.createTest(result.getMethod().getMethodName());
+		String methodName = result.getMethod().getMethodName();
+		String description = result.getMethod().getDescription();
+
+		// Use description as the test name if available, otherwise fallback to method
+		// name
+		String reportTestName = (description != null && !description.isEmpty()) ? description : methodName;
+
+		test = extent.createTest(reportTestName);
 		extentTest.set(test);
 	}
 

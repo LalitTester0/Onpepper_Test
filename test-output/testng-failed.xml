@@ -9,7 +9,7 @@
       <class name="onpepper.Data_Analytics.Tests.SourceFile_Upload_Validation">
         <methods>
           <include name="closeapplication"/>
-          <include name="resetModal"/>
+          <include name="checkMandatoryFields"/>
           <include name="launchApplication"/>
         </methods>
       </class> <!-- onpepper.Data_Analytics.Tests.SourceFile_Upload_Validation -->
